@@ -9,12 +9,13 @@ class Request
 	 */
 	private $uriSegments;
 
+    private $controllerPath;
 	/**
 	 * The controller directory for the request.
 	 * 
 	 * @var string
 	 */
-	private $controllerDirectory;
+	private $controllerDirectory = '';
 
 	/**
 	 * The requested controller.
@@ -45,6 +46,7 @@ class Request
 	public function __construct()
 	{
 		$this->uriSegments = explode('/', trim(str_replace(BASE_PATH, '', $_SERVER['REQUEST_URI']), '/'));
+        $this->controllerPath = APP_PATH.'controllers'.DS;
 		$this->getControllerDirectory();
 	}
 
@@ -61,13 +63,9 @@ class Request
 	 */
 	public function getControllerDirectory()
 	{
-		$controllerDirectory = APP_PATH.'controllers'.DS;
-
 		foreach ($this->uriSegments as $segment) {
-			$controllerDirectory .= ($segment && is_dir($controllerDirectory.$segment)) ? array_shift($this->uriSegments).DS : '';
+			$this->controllerDirectory .= ($segment && is_dir($this->controllerPath.$this->controllerDirectory.$segment)) ? array_shift($this->uriSegments).DS : '';
 		}
-
-		$this->controllerDirectory = $controllerDirectory;
 	}
 
 	/**
@@ -112,7 +110,7 @@ class Request
      */
     private function controllerExists($controller)
     {
-        return file_exists($this->controllerDirectory.$controller.EXT);
+        return file_exists($this->controllerPath.$this->controllerDirectory.$controller.EXT);
     }
     
     /**
@@ -123,9 +121,9 @@ class Request
      */
     private function loadController($controller)
     {
-        require_once $this->controllerDirectory.$controller.EXT;        
+        require_once $this->controllerPath.$this->controllerDirectory.$controller.EXT;        
         $controller = $this->formatController($controller);
-        
+
         return new $controller($this);
     }
     
@@ -137,7 +135,8 @@ class Request
      */
     private function formatController($controller)
     {
-        return ucfirst($controller).'Controller';
+        $directory = str_replace('/', '', $this->controllerDirectory);
+        return ucfirst($directory).ucfirst($controller).'Controller';
     }
     
     /**
