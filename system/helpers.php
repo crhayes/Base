@@ -40,3 +40,13 @@ function partial($name)
 {
 	echo View::getInstance()->load($name);
 }
+
+function asset($path)
+{
+	return BASE_PATH.'assets'.DS.$path;
+}
+
+function route($path)
+{
+	return URL::toRoute($path);
+}
