@@ -2,10 +2,5 @@
 
 <?php section('content') ?>
 	<h1>Welcome to Base!</h1>
-	<p>This is a small, simple, awesome framework!</p>
-
-	<?php foreach ($users as $user) : ?>
-		<?= $user->user_id ?>
-		<br>
-	<?php endforeach; ?>
+	<p>Base is a small application framework for building small to medium sized websites and apps.</p>
 <?php close() ?>

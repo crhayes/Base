@@ -33,8 +33,6 @@ class Session
 	 * @var Crypt_AES
 	 */
 	public $aes;
-
-	protected static $flashedSessions = array();
 	
 	/**
 	 * Create a new instance of the Session class.
@@ -107,25 +105,6 @@ class Session
 	 */
 	public static function __callStatic($name, $arguments)
 	{
-		switch($name) {
-			case 'set':
-				list($key, $value) = $arguments;
-				self::$instance->set($key, $value);
-				break;
-			case 'flash':
-				list($key, $value) = $arguments;
-				self::$instance->flash($key, $value);
-				break;
-			case 'get':
-				list($key) = $arguments;
-				return self::$instance->get($key);
-			case 'forget':
-				list($key) = $arguments;
-				self::$instance->unset($key);
-				break;
-			case 'sweep':
-				self::$instance->sweep();
-				break;
-		}
+		return call_user_func_array(array(self::$instance, $name), $arguments);
 	}
 }
