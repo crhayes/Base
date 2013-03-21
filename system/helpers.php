@@ -1,5 +1,19 @@
 <?php
 
+/**
+ * Dump the given value and kill the script.
+ *
+ * @param  mixed  $value
+ * @return void
+ */
+ function dd($value)
+ {
+ 	echo '<pre>';
+ 	var_dump($value);
+ 	echo '</pre>';
+ 	die();
+ }
+ 
 function extend($name)
 {
 	View::getInstance()->extend($name);

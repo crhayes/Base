@@ -15,12 +15,17 @@ define('APP_PATH', DOC_ROOT.'application'.DS);
 define('BASE_PATH', substr(DOC_ROOT, strlen($_SERVER['DOCUMENT_ROOT'])));
 
 // --------------------------------------------------------------
-// Define useful app constants.
+// Load the required core system files.
 // --------------------------------------------------------------
 require SYS_PATH.'autoload'.EXT;
 require SYS_PATH.'request'.EXT;
 require SYS_PATH.'arr'.EXT;
 require SYS_PATH.'helpers'.EXT;
+
+// --------------------------------------------------------------
+// Bootstrap the application.
+// --------------------------------------------------------------
+require APP_PATH.'bootstrap'.EXT;
 
 // --------------------------------------------------------------
 // Create a new request, route it, and get the response.
@@ -34,7 +39,12 @@ $response = $request->route();
 if ($response instanceOf View) {
 	$response->render();
 } elseif ($response instanceOf Redirect) {
-	
+	$response->redirect();
 } else {
 	echo $response;
 }
+
+// --------------------------------------------------------------
+// Clean up any flashed session data.
+// --------------------------------------------------------------
+Session::sweep();

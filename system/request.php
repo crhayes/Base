@@ -45,7 +45,7 @@ class Request
 	public function __construct()
 	{
 		$this->uriSegments = explode('/', trim(str_replace(BASE_PATH, '', $_SERVER['REQUEST_URI']), '/'));
-		$this->getcontrollerDirectory();
+		$this->getControllerDirectory();
 	}
 
 	/**
@@ -59,7 +59,7 @@ class Request
 	 * 
 	 * @return void
 	 */
-	public function getcontrollerDirectory()
+	public function getControllerDirectory()
 	{
 		$controllerDirectory = APP_PATH.'controllers'.DS;
 
@@ -77,7 +77,6 @@ class Request
      */
     function route()
     {
-        // Get the request URI segments
         $segments = $this->uriSegments;
 
         // If the first segment is a valid controller we shift it off the segments array
@@ -100,9 +99,9 @@ class Request
         
         $response = $controller->before();
         $response = (is_null($response)) ? call_user_func_array(array($controller, $action), $this->params) : $response;
-        $response = (is_null($response)) ? $controller->after() : $response;
+        $controller->after();
 
-       return $response;
+        return $response;
     }
     
     /**
@@ -191,5 +190,19 @@ class Request
     public function param($index)
     {
     	return Arr::get(($index-1), $this->params);
+    }
+
+    /**
+     * Get the referring page.
+     * 
+     * @return  mixed 
+     */
+    public static function referrer()
+    {
+        if (isset($_SERVER['HTTP_REFERER'])) {
+            return $_SERVER['HTTP_REFERER'];
+        }
+        
+        return false;
     }
 }

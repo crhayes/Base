@@ -4,15 +4,16 @@ class IndexController extends Controller
 {
 	public function actionIndex()
 	{
-		$data = array(
-			'title' => 'Welcome to Base!'
-		);
+		return Redirect::to('site')->with('name', 'Chris');
+		$title = 'Welcome to Base!';
 
-		return View::make('index', $data);
+		$users = Database::query('SELECT * FROM users');
+
+		return View::make('index', compact('title', 'users'));
 	}
 
-	public function actionSite($slug)
+	public function actionSite()
 	{
-		return $slug;
+		echo Session::get('name');
 	}
 }

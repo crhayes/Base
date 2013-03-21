@@ -12,8 +12,8 @@ class Arr
      * Given an array key get it's value if it exists, otherwise return a 
      * default value.
      * 
-     * @param   string  $key    Array key to search for.
-     * @param   array   $array  Array to search through.
+     * @param   string  $key
+     * @param   array   $array
      * @param   string  $default
      * @return  mixed 
      */
@@ -26,8 +26,9 @@ class Arr
      * Given an array key in "dot notation" get an array value if it 
      * exists, otherwise return a default value.
      * 
-     * @param   string  $keys   Array key as a dot notated string.
-     * @param   array   $array  Array to search through.
+     * @param   string  $keys
+     * @param   array   $array
+     * @param   array   $default
      * @return  string
      */
     public static function getFromString($keys, $array, $default = null)
