@@ -1,8 +1,12 @@
-<?php defined('SYS_PATH') or die('No direct script access.');
-
-// --------------------------------------------------------------
-// Set up autoloading for system files, models, and libraries.
-// --------------------------------------------------------------
+<?php
+/**
+ * Set up autoloading for system files, models, controllers, and libraries.
+ * 
+ * @package     Base PHP Framework
+ * @author      Chris Hayes <chris@chrishayes.ca>, <chayes@okd.com>
+ * @copyright   (c) 2012-2013 Chris Hayes, OKD
+ * @license     http://opensource.org/licenses/MIT
+ */
 function autoloadSystem($className)
 {
     $class = strtolower($className);

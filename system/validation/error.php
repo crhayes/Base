@@ -1,5 +1,17 @@
 <?php
-
+/**
+ * The validation library provides a utility that makes it dead simple to 
+ * validate forms. It allows rules to be applied to form attributes and then 
+ * automagically validates the rules against each attribute.
+ *
+ * This class stores any errors that occur during validation and provides
+ * a simple interface to display those errors.
+ * 
+ * @package     Base PHP Framework
+ * @author      Chris Hayes <chris@chrishayes.ca>, <chayes@okd.com>
+ * @copyright   (c) 2012-2013 Chris Hayes, OKD
+ * @license     http://opensource.org/licenses/MIT
+ */
 class ValidationError
 {
     /**

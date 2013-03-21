@@ -1,25 +1,16 @@
 <?php
-
 /**
  * The validation library provides a utility that makes it dead simple to 
  * validate forms. It allows rules to be applied to form attributes and then 
  * automagically validates the rules against each attribute.
  *
- * Classes
- * -------
- * Validation
- * ValidationError
+ * This class stores the validation rules and runs the validation checks.
+ * It returns a ValidationError object if there are any errors.
  * 
- * @author      Chris Hayes <chayes@okd.com, chris@chrishayes.ca>
- * @link        http://okd.com, http://chrishayes.ca
- * @copyright   (c) 2012 OKD, Chris Hayes
- */
-
-// Alias class to create a more semantic version
-class_alias('Validation', 'Validate');
-
-/**
- * Iniatiates the validation library and contains all of the validation rules.
+ * @package     Base PHP Framework
+ * @author      Chris Hayes <chris@chrishayes.ca>, <chayes@okd.com>
+ * @copyright   (c) 2012-2013 Chris Hayes, OKD
+ * @license     http://opensource.org/licenses/MIT
  */
 class Validation 
 {

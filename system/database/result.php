@@ -1,5 +1,16 @@
 <?php
-
+/**
+ * Database Utility. Provides a wrapper around PHP's PDO extension to 
+ * simplify database querying.
+ *
+ * This class stores the results of a database query and provides
+ * an easy way to iterate over and use the results.
+ * 
+ * @package     Base PHP Framework
+ * @author      Chris Hayes <chris@chrishayes.ca>, <chayes@okd.com>
+ * @copyright   (c) 2012-2013 Chris Hayes, OKD
+ * @license     http://opensource.org/licenses/MIT
+ */
 class DatabaseResult implements ArrayAccess, IteratorAggregate
 {
 	/**

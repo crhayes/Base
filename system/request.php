@@ -1,5 +1,15 @@
 <?php
-
+/**
+ * The Request class handles storing the request parameters (controller, action, params)
+ * and routing the request.
+ * 
+ * The appropriate Controller->action() method is called from here.
+ * 
+ * @package     Base PHP Framework
+ * @author      Chris Hayes <chris@chrishayes.ca>, <chayes@okd.com>
+ * @copyright   (c) 2012-2013 Chris Hayes, OKD
+ * @license     http://opensource.org/licenses/MIT
+ */
 class Request
 {
 	/**
@@ -9,6 +19,11 @@ class Request
 	 */
 	private $uriSegments;
 
+    /**
+     * The path to the controller directory.
+     * 
+     * @var string
+     */
     private $controllerPath;
 	/**
 	 * The controller directory for the request.

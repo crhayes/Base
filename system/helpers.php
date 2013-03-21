@@ -1,18 +1,20 @@
 <?php
-
 /**
- * Dump the given value and kill the script.
- *
- * @param  mixed  $value
- * @return void
+ * Useful helper functions.
+ * 
+ * @package     Base PHP Framework
+ * @author      Chris Hayes <chris@chrishayes.ca>, <chayes@okd.com>
+ * @copyright   (c) 2012-2013 Chris Hayes, OKD
+ * @license     http://opensource.org/licenses/MIT
  */
- function dd($value)
- {
- 	echo '<pre>';
- 	var_dump($value);
- 	echo '</pre>';
- 	die();
- }
+
+function dd($value)
+{
+	echo '<pre>';
+	var_dump($value);
+	echo '</pre>';
+	die();
+}
  
 function extend($name)
 {

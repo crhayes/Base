@@ -1,12 +1,12 @@
 <?php
-
 /**
  * Cookie Utility. Provides a wrapper for PHP cookie handling that
  * provides session encryption.
- *
- * @author      Chris Hayes <chayes@okd.com, chris@chrishayes.ca>
- * @link        http://okd.com, http://chrishayes.ca
- * @copyright   (c) 2012 OKD, Chris Hayes
+ * 
+ * @package     Base PHP Framework
+ * @author      Chris Hayes <chris@chrishayes.ca>, <chayes@okd.com>
+ * @copyright   (c) 2012-2013 Chris Hayes, OKD
+ * @license     http://opensource.org/licenses/MIT
  */
 class Cookie
 {	

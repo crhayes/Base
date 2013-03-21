@@ -1,10 +1,11 @@
-<?php defined('SYS_PATH') or die('No direct script access.');
+<?php
 /**
  * URL helper class to make it easy to create URLs.
  * 
- * @package     ssMVC - Super Simple MVC
- * @author      Chris Hayes <chris at chrishayes.ca>
- * @copyright   (c) 2012 Chris Hayes
+ * @package     Base PHP Framework
+ * @author      Chris Hayes <chris@chrishayes.ca>, <chayes@okd.com>
+ * @copyright   (c) 2012-2013 Chris Hayes, OKD
+ * @license     http://opensource.org/licenses/MIT
  */
 class Url
 {    

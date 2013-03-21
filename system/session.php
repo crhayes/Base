@@ -1,13 +1,15 @@
 <?php
-
 /**
  * Session Utility. Provides a wrapper for PHP session handling that
  * provides session encryption as well as several different session
- * storage drivers (native, cookie, database);
+ * storage drivers (native, cookie, database).
  *
- * @author      Chris Hayes <chayes@okd.com, chris@chrishayes.ca>
- * @link        http://okd.com, http://chrishayes.ca
- * @copyright   (c) 2012 OKD, Chris Hayes
+ * This class handles executes a query and returns a DatabaseQuery result.
+ * 
+ * @package     Base PHP Framework
+ * @author      Chris Hayes <chris@chrishayes.ca>, <chayes@okd.com>
+ * @copyright   (c) 2012-2013 Chris Hayes, OKD
+ * @license     http://opensource.org/licenses/MIT
  */
 class Session
 {	

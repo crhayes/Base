@@ -1,5 +1,15 @@
 <?php
-
+/**
+ * The view class provides template inheritance. 
+ *
+ * Views can easily extend a base 'layout' and define sections
+ * of content that can be easily extended or overwritten.
+ * 
+ * @package     Base PHP Framework
+ * @author      Chris Hayes <chris@chrishayes.ca>, <chayes@okd.com>
+ * @copyright   (c) 2012-2013 Chris Hayes, OKD
+ * @license     http://opensource.org/licenses/MIT
+ */
 class View
 {
 	/**

@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * Cookie session driver. Allows sessions to be stored in cookies.
+ * 
+ * @package     Base PHP Framework
+ * @author      Chris Hayes <chris@chrishayes.ca>, <chayes@okd.com>
+ * @copyright   (c) 2012-2013 Chris Hayes, OKD
+ * @license     http://opensource.org/licenses/MIT
+ */
 class SessionCookie extends Session implements SessionDriver
 {	
 	/**

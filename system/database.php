@@ -1,24 +1,15 @@
 <?php
-
 /**
  * Database Utility. Provides a wrapper around PHP's PDO extension to 
  * simplify database querying.
  *
- * Classes
- * -------
- * Database
- * DatabaseQuery
- *
- * @author      Chris Hayes <chayes@okd.com, chris@chrishayes.ca>
- * @link        http://okd.com, http://chrishayes.ca
- * @copyright   (c) 2012 OKD, Chris Hayes
- */
-
-// Alias the Database class for ease-of-use
-class_alias('Database', 'DB');
-
-/**
- * Initiates the PDO connection and creates a DatabaseQuery object.
+ * This class handles creating a PDO connection, creating a DatabaseQuery
+ * object, executing the query and returning a DatabaseResult object.
+ * 
+ * @package     Base PHP Framework
+ * @author      Chris Hayes <chris@chrishayes.ca>, <chayes@okd.com>
+ * @copyright   (c) 2012-2013 Chris Hayes, OKD
+ * @license     http://opensource.org/licenses/MIT
  */
 class Database
 {
