@@ -1,23 +1,23 @@
 <?php
 /**
- * The Request class handles storing the request parameters (controller, action, params)
- * and routing the request.
- * 
- * The appropriate Controller->action() method is called from here.
- * 
- * @package     Base PHP Framework
- * @author      Chris Hayes <chris@chrishayes.ca>, <chayes@okd.com>
- * @copyright   (c) 2012-2013 Chris Hayes, OKD
- * @license     http://opensource.org/licenses/MIT
- */
+* The Request class handles storing the request parameters (controller, action, params)
+* and routing the request.
+* 
+* The appropriate Controller->action() method is called from here.
+* 
+* @package     Base PHP Framework
+* @author      Chris Hayes <chris@chrishayes.ca>, <chayes@okd.com>
+* @copyright   (c) 2012-2013 Chris Hayes, OKD
+* @license     http://opensource.org/licenses/MIT
+*/
 class Request
 {
-	/**
-	 * The URI segments from the request.
-	 * 
-	 * @var array
-	 */
-	private $uriSegments;
+    /**
+     * The URI segments from the request.
+     * 
+     * @var array
+     */
+    private $uriSegments;
 
     /**
      * The path to the controller directory.
@@ -25,65 +25,66 @@ class Request
      * @var string
      */
     private $controllerPath;
-	/**
-	 * The controller directory for the request.
-	 * 
-	 * @var string
-	 */
-	private $controllerDirectory = '';
 
-	/**
-	 * The requested controller.
-	 * 
-	 * @var string
-	 */
-	private $controller;
+    /**
+     * The controller directory for the request.
+     * 
+     * @var string
+     */
+    private $controllerDirectory = '';
 
-	/**
-	 * The requested action.
-	 * 
-	 * @var string
-	 */
-	private $action;
+    /**
+     * The requested controller.
+     * 
+     * @var string
+     */
+    private $controller;
 
-	/**
-	 * The request parameters.
-	 * 
-	 * @var array
-	 */
-	private $params = array();
+    /**
+     * The requested action.
+     * 
+     * @var string
+     */
+    private $action;
 
-	/**
-	 * Setup the request and determine the controller directory.
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-		$this->uriSegments = explode('/', trim(str_replace(BASE_PATH, '', $_SERVER['REQUEST_URI']), '/'));
+    /**
+     * The request parameters.
+     * 
+     * @var array
+     */
+    private $params = array();
+
+    /**
+     * Setup the request and determine the controller directory.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+    	$this->uriSegments = explode('/', trim(str_replace(BASE_PATH, '', $_SERVER['REQUEST_URI']), '/'));
         $this->controllerPath = APP_PATH.'controllers'.DS;
-		$this->getControllerDirectory();
-	}
+    	$this->getControllerDirectory();
+    }
 
-	/**
-	 * Get the controller directory from the request parameters.
-	 *
-	 * This method loops through the request parameters (starting from the first) and
-	 * determines if each is a directory under the 'controllers' directory. If so, it is 
-	 * removed from the request parameters and appended to the controller directory string.
-	 *
-	 * This allows us to have nested directories for our controllers.
-	 * 
-	 * @return void
-	 */
-	public function getControllerDirectory()
-	{
-		foreach ($this->uriSegments as $segment) {
-			$this->controllerDirectory .= ($segment && is_dir($this->controllerPath.$this->controllerDirectory.$segment)) ? array_shift($this->uriSegments).DS : '';
-		}
-	}
+    /**
+     * Get the controller directory from the request parameters.
+     *
+     * This method loops through the request parameters (starting from the first) and
+     * determines if each is a directory under the 'controllers' directory. If so, it is 
+     * removed from the request parameters and appended to the controller directory string.
+     *
+     * This allows us to have nested directories for our controllers.
+     * 
+     * @return void
+     */
+    public function getControllerDirectory()
+    {
+    	foreach ($this->uriSegments as $segment) {
+    		$this->controllerDirectory .= ($segment && is_dir($this->controllerPath.$this->controllerDirectory.$segment)) ? array_shift($this->uriSegments).DS : '';
+    	}
+    }
 
-	/**
+    /**
      * Load a controller, call the appropriate action and render a response.
      * 
      * @return void
@@ -116,7 +117,7 @@ class Request
 
         return $response;
     }
-    
+
     /**
      * Check if a controller exists that matches the request.
      * 
@@ -127,7 +128,7 @@ class Request
     {
         return file_exists($this->controllerPath.$this->controllerDirectory.$controller.EXT);
     }
-    
+
     /**
      * Load a controller.
      * 
@@ -141,7 +142,7 @@ class Request
 
         return new $controller($this);
     }
-    
+
     /**
      * Format a controller so we can create a new instance.
      * 
@@ -153,7 +154,7 @@ class Request
         $directory = str_replace('/', '', $this->controllerDirectory);
         return ucfirst($directory).ucfirst($controller).'Controller';
     }
-    
+
     /**
      * Format an action so we can call it. If the controller calling the
      * request is using restful routing we prepend the request type.
@@ -167,7 +168,7 @@ class Request
         if ($restful == true) {
             $prefix = strtolower($_SERVER['REQUEST_METHOD']);
         } else {
-        	$prefix = 'action';
+            $prefix = 'action';
         }
         
         return $prefix.ucfirst($action);

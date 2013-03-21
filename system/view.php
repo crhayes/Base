@@ -61,6 +61,11 @@ class View
 	 */
 	private $data = array();
 
+	/**
+	 * HTTP status code.
+	 * 
+	 * @var int
+	 */
 	private $status;
 
 	/**
@@ -127,6 +132,15 @@ class View
 		return $this;
 	}
 
+	/**
+	 * Sets the HTTP status code for the view.
+	 * 
+	 * This is useful, for example, when we want to show a 404/error page 
+	 * with a 404 response but don't want to redirect the user.
+	 * 
+	 * @param  int 		$code
+	 * @return View
+	 */
 	public function status($code)
 	{
 		$this->status = $code;
