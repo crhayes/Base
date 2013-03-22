@@ -20,13 +20,15 @@ class SessionDatabase extends Session implements SessionDriver
 	public function set($key, $value, $flashed = false)
 	{
 		Database::query('
-			INSERT INTO session (session_id, data, flashed, last_activity)
-				VALUES(:session_id, :data, :flashed, NOW())
-				ON DUPLICATE KEY UPDATE data = :data, flashed = :flashed, last_activity = NOW()', 
+			INSERT INTO session (session_id, key_val, data, flashed, last_activity)
+				VALUES(:session_id, :key_val, :data, :flashed, :last_activity)
+				ON DUPLICATE KEY UPDATE session_id = :session_id, key_val = :key_val, data = :data, flashed = :flashed, last_activity = :last_activity', 
 			array(
-				':session_id' => $key,
+				':session_id' => session_id(),
+				':key_val' => $key,
 				':data' => Hash::make(serialize($value)),
-				':flashed' => (int) $flashed));
+				':flashed' => (int) $flashed,
+				':last_activity' => strtotime('now')));
 	}
 
 	/**
@@ -51,8 +53,7 @@ class SessionDatabase extends Session implements SessionDriver
 	 */
 	public function get($key, $checkIfFlashed = false)
 	{		
-		$session = Database::row('SELECT * FROM session WHERE session_id = ?', array($key));
-
+		$session = Database::row('SELECT * FROM session WHERE session_id = ? AND key_val = ?', array(session_id(), $key));
 		if ($session->count()) {
 			// Just want to know if the session is a flashed one
 			if ($checkIfFlashed) {
@@ -62,7 +63,7 @@ class SessionDatabase extends Session implements SessionDriver
 				$lifetime = Config::get('session.lifetime');
 
 				// The session is valid
-				if ((strtotime($session->last_activity) + $lifetime) > strtotime('now')) {
+				if (($session->last_activity + $lifetime) > strtotime('now')) {
 					return unserialize(Hash::undo($session->data));
 				// Session has expired
 				} else {
