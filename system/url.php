@@ -8,7 +8,20 @@
  * @license     http://opensource.org/licenses/MIT
  */
 class Url
-{    
+{
+    /**
+     * Determine the base URL of the application.
+     * 
+     * @return   string 
+     */
+    public static function base()
+    {
+        // Determine whether to use HTTP or HTTPS
+        $protocol = (Arr::get('HTTPS', $_SERVER) && $_SERVER['HTTPS'] != "off") ? "https://" : "http://";
+        
+        return $protocol.$_SERVER['HTTP_HOST'].BASE_PATH;
+    }
+
     /**
      * Create a URL to a route.
      * 
@@ -17,6 +30,6 @@ class Url
      */
     public static function toRoute($route)
     {
-        return BASE_PATH.$route;
+        return self::base().$route;
     }
 }
