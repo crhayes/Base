@@ -109,4 +109,14 @@ class DatabaseQuery
 
 		return new DatabaseResult($this, $result);
 	}
+
+	/**
+	 * Return the number of query results.
+	 * 
+	 * @return  int
+	 */
+	public function resultCount()
+	{
+		 return $this->query->rowCount();
+	}
 }

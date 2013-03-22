@@ -46,7 +46,7 @@ class DatabaseResult implements ArrayAccess, IteratorAggregate
 	 */
 	public function count()
 	{
-		return $this->query->rowCount();
+		return $this->query->resultCount();
 	}
 
 	/**
