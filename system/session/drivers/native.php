@@ -51,21 +51,24 @@ class SessionNative extends Session implements SessionDriver
 	public function get($key, $checkIfFlashed = false)
 	{
 		if (isset($_SESSION[$key])) {
-			extract(unserialize(Hash::undo($_SESSION[$key])));
-			
-			// Just want to know if the session is a flashed one
-			if ($checkIfFlashed) {
-				return $flashed;
-			// Otherwise we want the session data
-			} else {
-				$lifetime = Config::get('session.lifetime');
+			$session = unserialize(Hash::undo($_SESSION[$key]));
 
-				// The session is valid
-				if (($lastActivity + $lifetime) > strtotime('now')) {
-					return $value;
-				// Session has expired
+			// This is a session we want to be concerned with
+			if (is_array($session) && extract($session) && isset($value) && isset($flashed) && isset($lastActivity)) {
+				// Just want to know if the session is a flashed one
+				if ($checkIfFlashed) {
+					return $flashed;
+				// Otherwise we want the session data
 				} else {
-					$this->forget($key);
+					$lifetime = Config::get('session.lifetime');
+
+					// The session is valid
+					if (($lastActivity + $lifetime) > strtotime('now')) {
+						return $value;
+					// Session has expired
+					} else {
+						$this->forget($key);
+					}
 				}
 			}
 		}
