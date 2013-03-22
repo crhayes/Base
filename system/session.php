@@ -19,13 +19,6 @@ class Session
 	 * @var Session
 	 */
 	private static $instance;
-
-	/**
-	 * Key to be used by the encryption library.
-	 * 
-	 * @var string
-	 */
-	private $cryptKey = 'okdsessionencryptionmanagement';
 	
 	/**
 	 * Stored instance of the phpSec AES encruption library.
@@ -53,7 +46,7 @@ class Session
 	 * @param  string 	$driver
 	 * @return object
 	 */
-	public static function start($driver = 'native')
+	public static function start($driver)
 	{
 		if ( ! isset(self::$instance)) {
 			self::$instance = self::load($driver);
@@ -83,16 +76,6 @@ class Session
 				require_once('session/drivers/native.php');
 				return new SessionNative();
 		}
-	}
-	
-	/**
-	 * Set the encryption key for the phpSec library.
-	 * 
-	 * @param string $key
-	 */
-	public function setKey($key)
-	{	
-		$this->aes->setKey($key);
 	}
 
 	/**

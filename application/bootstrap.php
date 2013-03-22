@@ -3,12 +3,12 @@
 // --------------------------------------------------------------
 // Load default configuration.
 // --------------------------------------------------------------
-Config::load(array('application', 'database'));
+Config::load(array('application', 'database', 'session'));
 
 // --------------------------------------------------------------
 // Start the session with the config-defined driver.
 // --------------------------------------------------------------
-Session::start(Config::get('application.session.driver'));
+Session::start(Config::get('session.driver'));
 
 // --------------------------------------------------------------
 // Set some defaults for the application.

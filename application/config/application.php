@@ -12,10 +12,5 @@ return array(
 		'reporting' => E_ALL
 	),
 
-	'session' => array(
-		'driver' 	=> 'native',
-		'lifetime' 	=> 3600
-	),
-
 	'key' => 'PleaseReplaceWithSecretKey!'
 );

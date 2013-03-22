@@ -58,7 +58,7 @@ class SessionNative extends Session implements SessionDriver
 				return $flashed;
 			// Otherwise we want the session data
 			} else {
-				$lifetime = Config::get('application.session.lifetime');
+				$lifetime = Config::get('session.lifetime');
 
 				// The session is valid
 				if (($lastActivity + $lifetime) > strtotime('now')) {
