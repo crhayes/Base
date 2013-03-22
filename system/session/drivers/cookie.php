@@ -17,27 +17,9 @@ class SessionCookie extends Session implements SessionDriver
 	 * @param  boolean	$flashed
 	 * @return void
 	 */
-	public function set($key, $value, $flashed = false)
+	public function set($key, $data)
 	{
-		$data = array(
-			'value' => $value,
-			'flashed' => $flashed,
-			'lastActivity' => strtotime('now')
-		);
-
-		setcookie($key, Hash::make(serialize($data)));
-	}
-
-	/**
-	 * Create an encrypted session that expires after one page request.
-	 * 
-	 * @param  string 	$key
-	 * @param  mixed 	$value
-	 * @return void
-	 */
-	public function flash($key, $value, $flashed = true)
-	{
-		$this->set($key, $value, $flashed);
+		setcookie($key, Hash::make(serialize($data)), null, '/');
 	}
 	
 	/**
@@ -50,56 +32,27 @@ class SessionCookie extends Session implements SessionDriver
 	 */
 	public function get($key, $checkIfFlashed = false)
 	{
-		if (isset($_COOKIE[$key])) {
-			$cookie = unserialize(Hash::undo($_COOKIE[$key]));
-
-			// This is a cookie we want to be concerned with
-			if (is_array($cookie) && extract($cookie) && isset($value) && isset($flashed) && isset($lastActivity)) {
-
-				// Just want to know if the session is a flashed one
-				if ($checkIfFlashed) {
-					return $flashed;
-				// Otherwise we want the session data
-				} else {
-					$lifetime = Config::get('session.lifetime');
-
-					// The session is valid
-					if (($lastActivity + $lifetime) > strtotime('now')) {
-						return $value;
-					// Session has expired
-					} else {
-						$this->forget($key);
-					}
-				}
-			}
-		}
-
-		return false;
+		return (isset($_COOKIE[$key])) ? unserialize(Hash::undo($_COOKIE[$key])) : false;
 	}
 	
 	/**
-	 * Delete a session variable.
+	 * Delete a cookie session.
 	 * 
 	 * @param  string 	$key
 	 * @return void
 	 */
 	public function forget($key)
 	{
-		setcookie($key, null, time()-3600);	
+		setcookie($key, false, time()-3600, '/');		
 	}
 
 	/**
-	 * Delete any sessions that have been flashed, as they are only valid
-	 * for one request.
+	 * Return all cookie sessions.
 	 * 
-	 * @return void
+	 * @return array
 	 */
-	public function sweep()
+	public function sessions()
 	{
-		foreach ($_COOKIE as $key => $data) {
-			if ($this->get($key, true) == true) {
-				$this->forget($key);
-			}
-		}
+		return $_COOKIE;
 	}
 }

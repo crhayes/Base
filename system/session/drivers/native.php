@@ -17,27 +17,9 @@ class SessionNative extends Session implements SessionDriver
 	 * @param  boolean	$flashed
 	 * @return void
 	 */
-	public function set($key, $value, $flashed = false)
+	public function set($key, $data)
 	{
-		$data = array(
-			'value' => $value,
-			'flashed' => $flashed,
-			'lastActivity' => strtotime('now')
-		);
-
 		$_SESSION[$key] = Hash::make(serialize($data));
-	}
-
-	/**
-	 * Create an encrypted session that expires after one page request.
-	 * 
-	 * @param  string 	$key
-	 * @param  mixed 	$value
-	 * @return void
-	 */
-	public function flash($key, $value, $flashed = true)
-	{
-		$this->set($key, $value, $flashed);
 	}
 	
 	/**
@@ -50,30 +32,7 @@ class SessionNative extends Session implements SessionDriver
 	 */
 	public function get($key, $checkIfFlashed = false)
 	{
-		if (isset($_SESSION[$key])) {
-			$session = unserialize(Hash::undo($_SESSION[$key]));
-
-			// This is a session we want to be concerned with
-			if (is_array($session) && extract($session) && isset($value) && isset($flashed) && isset($lastActivity)) {
-				// Just want to know if the session is a flashed one
-				if ($checkIfFlashed) {
-					return $flashed;
-				// Otherwise we want the session data
-				} else {
-					$lifetime = Config::get('session.lifetime');
-
-					// The session is valid
-					if (($lastActivity + $lifetime) > strtotime('now')) {
-						return $value;
-					// Session has expired
-					} else {
-						$this->forget($key);
-					}
-				}
-			}
-		}
-
-		return false;
+		return (isset($_SESSION[$key])) ? unserialize(Hash::undo($_SESSION[$key])) : false;
 	}
 	
 	/**
@@ -88,17 +47,12 @@ class SessionNative extends Session implements SessionDriver
 	}
 
 	/**
-	 * Delete any sessions that have been flashed, as they are only valid
-	 * for one request.
+	 * Return all native sessions.
 	 * 
-	 * @return void
+	 * @return array
 	 */
-	public function sweep()
+	public function sessions()
 	{
-		foreach ($_SESSION as $key => $data) {
-			if ($this->get($key, true) == true) {
-				$this->forget($key);
-			}
-		}
+		return $_SESSION;
 	}
 }

@@ -52,7 +52,7 @@ class Session
 	 * Load a session driver.
 	 * 
 	 * @param  string 	$driver
-	 * @return object
+	 * @return SessionDriver
 	 */
 	public static function load($driver)
 	{
@@ -72,6 +72,95 @@ class Session
 	}
 
 	/**
+	 * Set encrypted session data with the loaded session driver.
+	 * 
+	 * @param string  	$key
+	 * @param mixed  	$value
+	 * @param boolean 	$flashed
+	 * @return void
+	 */
+	private function _set($key, $value, $flashed = false)
+	{
+		$data = array(
+			'value' => $value,
+			'flashed' => $flashed,
+			'lastActivity' => strtotime('now')
+		);
+
+		$this->set($key, $data);
+	}
+
+	/**
+	 * 'Flash' encrypted session data with the loaded session driver. The value
+	 * will expire after a single request.
+	 * 
+	 * @param string  	$key
+	 * @param mixed  	$value
+	 * @param boolean 	$flashed
+	 * @return void
+	 */
+	private function _flash($key, $value, $flashed = true)
+	{
+		$this->_set($key, $value, true);
+	}
+	/**
+	 * Get decrypted session data with the loaded session driver.
+	 * 
+	 * @param  string  	$key
+	 * @param  boolean 	$checkIfFlashed
+	 * @return mixed
+	 */
+	private function _get($key, $checkIfFlashed = false)
+	{
+		$session = $this->get($key);
+
+		if (is_array($session) && extract($session) && isset($value) && isset($flashed) && isset($lastActivity)) {
+			// Just want to know if the session is a flashed one
+			if ($checkIfFlashed) {
+				return $flashed;
+			// Otherwise we want the session data
+			} else {
+				$lifetime = Config::get('session.lifetime');
+
+				// The session is valid
+				if (($lastActivity + $lifetime) > strtotime('now')) {
+					return $value;
+				// Session has expired
+				} else {
+					$this->forget($key);
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Delete session data with the loaded session driver.
+	 * 
+	 * @param  string $key
+	 * @return void
+	 */
+	private function _forget($key)
+	{
+		$this->forget($key);
+	}
+
+	/**
+	 * Clean up any expired sessions with loaded session driver.
+	 * 
+	 * @return void
+	 */
+	public function _sweep()
+	{
+		foreach ($this->sessions() as $key => $data) {
+			if ($this->_get($key, true) == true) {
+				$this->forget($key);
+			}
+		}
+	}
+
+	/**
 	 * Allow static interface for setting, getting, and
 	 * deleting sessions.
 	 * 
@@ -81,6 +170,6 @@ class Session
 	 */
 	public static function __callStatic($name, $arguments)
 	{
-		return call_user_func_array(array(self::$instance, $name), $arguments);
+		return call_user_func_array(array(self::$instance, '_'.$name), $arguments);
 	}
 }

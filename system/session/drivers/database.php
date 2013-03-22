@@ -20,27 +20,15 @@ class SessionDatabase extends Session implements SessionDriver
 	public function set($key, $value, $flashed = false)
 	{
 		Database::query('
-			INSERT INTO session (session_id, key_val, data, flashed, last_activity)
-				VALUES(:session_id, :key_val, :data, :flashed, :last_activity)
-				ON DUPLICATE KEY UPDATE session_id = :session_id, key_val = :key_val, data = :data, flashed = :flashed, last_activity = :last_activity', 
+			INSERT INTO session (session_id, key_val, data)
+				VALUES(:session_id, :key_val, :data)
+				ON DUPLICATE KEY UPDATE session_id = :session_id, key_val = :key_val, data = :data', 
 			array(
 				':session_id' => session_id(),
 				':key_val' => $key,
-				':data' => Hash::make(serialize($value)),
-				':flashed' => (int) $flashed,
-				':last_activity' => strtotime('now')));
-	}
-
-	/**
-	 * Create an encrypted session that expires after one page request.
-	 * 
-	 * @param  string 	$key
-	 * @param  mixed 	$value
-	 * @return void
-	 */
-	public function flash($key, $value, $flashed = true)
-	{
-		$this->set($key, $value, $flashed);
+				':data' => Hash::make(serialize($value))
+			)
+		);
 	}
 	
 	/**
@@ -54,53 +42,19 @@ class SessionDatabase extends Session implements SessionDriver
 	public function get($key, $checkIfFlashed = false)
 	{		
 		$session = Database::row('SELECT * FROM session WHERE session_id = ? AND key_val = ?', array(session_id(), $key));
-		if ($session->count()) {
-			// Just want to know if the session is a flashed one
-			if ($checkIfFlashed) {
-				return $session->flashed;
-			// Otherwise we want the session data
-			} else {
-				$lifetime = Config::get('session.lifetime');
 
-				// The session is valid
-				if (($session->last_activity + $lifetime) > strtotime('now')) {
-					return unserialize(Hash::undo($session->data));
-				// Session has expired
-				} else {
-					$this->forget($session->session_id);
-				}
-			}
-		}
-
-		return false;
+		return ($session->count()) ? unserialize(Hash::undo($session->data)) : false;
 	}
 	
 	/**
-	 * Delete a session variable.
+	 * Delete a database session.
 	 * 
 	 * @param  string 	$key
 	 * @return void
 	 */
 	public function forget($key)
 	{
-		Database::query('DELETE FROM session WHERE session_id = ?', array($key));
-	}
-
-	/**
-	 * Delete any sessions that have been flashed, as they are only valid
-	 * for one request.
-	 * 
-	 * @return void
-	 */
-	public function sweep()
-	{
-		if (($sessions = $this->all()) && $sessions->count()) {
-			foreach ($sessions as $session) {
-				if ($this->get($session->session_id, true) == true) {
-					$this->forget($session->session_id);
-				}
-			}
-		}
+		Database::query('DELETE FROM session WHERE session_id = ? AND key_val = ?', array(session_id(), $key));
 	}
 
 	/**
@@ -108,7 +62,7 @@ class SessionDatabase extends Session implements SessionDriver
 	 * 
 	 * @return DatabaseResult
 	 */
-	private function all()
+	public function sessions()
 	{
 		return Database::query('SELECT * FROM session');
 	}
