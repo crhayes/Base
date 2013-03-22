@@ -31,8 +31,14 @@ class Config
      */
     public static function load($fileName)
     {
-        if (file_exists($path = APP_PATH.'config'.DS.str_replace('.', '/', $fileName).EXT)) {
-            self::$loadedFiles = self::$loadedFiles + Arr::setFromString($fileName, require_once($path));
+        // Load a single file
+        if ( ! is_array($fileName)) {
+            return self::loadFile($fileName);
+        }
+
+        // If we have an array load each file
+        foreach ($fileName as $file) {
+            self::loadFile($file);
         }
     }
 
@@ -51,5 +57,12 @@ class Config
         if (is_null($keys)) return $config;
         
         return Arr::getFromString($keys, $config, $default);
+    }
+
+    private static function loadFile($fileName)
+    {
+        if (file_exists($path = APP_PATH.'config'.DS.str_replace('.', '/', $fileName).EXT)) {
+            self::$loadedFiles = self::$loadedFiles + Arr::setFromString($fileName, require_once($path));
+        }
     }
 }
