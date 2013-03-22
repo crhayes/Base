@@ -116,20 +116,17 @@ class Session
 		$session = $this->get($key);
 
 		if (is_array($session) && extract($session) && isset($value) && isset($flashed) && isset($lastActivity)) {
-			// Just want to know if the session is a flashed one
+			// Return the 'flashed' status if that's what we're after
 			if ($checkIfFlashed) {
 				return $flashed;
-			// Otherwise we want the session data
-			} else {
-				$lifetime = Config::get('session.lifetime');
+			}
 
-				// The session is valid
-				if (($lastActivity + $lifetime) > strtotime('now')) {
-					return $value;
-				// Session has expired
-				} else {
-					$this->forget($key);
-				}
+			// The session is valid
+			if (($lastActivity + Config::get('session.lifetime')) > strtotime('now')) {
+				return $value;
+			// Session has expired
+			} else {
+				$this->forget($key);
 			}
 		}
 

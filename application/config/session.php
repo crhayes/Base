@@ -1,6 +1,6 @@
 <?php
 
 return array(
-	'driver' 	=> 'cookie',
+	'driver' 	=> 'native',
 	'lifetime' 	=> 3600
 );
