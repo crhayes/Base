@@ -13,7 +13,8 @@ return array(
 	),
 
 	'session' => array(
-		'driver' => 'native'
+		'driver' 	=> 'native',
+		'lifetime' 	=> 3600
 	),
 
 	'key' => 'PleaseReplaceWithSecretKey!'

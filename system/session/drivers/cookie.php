@@ -19,7 +19,13 @@ class SessionCookie extends Session implements SessionDriver
 	 */
 	public function set($key, $value, $flashed = false)
 	{
-		$_COOKIE[$key] = $this->aes->encrypt(serialize(compact('value', 'flashed')));
+		$data = array(
+			'value' => $value,
+			'flashed' => $flashed,
+			'lastActivity' => strtotime('now')
+		);
+
+		setcookie($key, Hash::make(serialize($data)));
 	}
 
 	/**
@@ -45,10 +51,30 @@ class SessionCookie extends Session implements SessionDriver
 	public function get($key, $checkIfFlashed = false)
 	{
 		if (isset($_COOKIE[$key])) {
-			extract(unserialize($this->aes->decrypt($_COOKIE[$key])));
-			
-			return ($checkIfFlashed) ? $flashed : $value;			
+			$cookie = unserialize(Hash::undo($_COOKIE[$key]));
+
+			// This is a cookie we want to be concerned with
+			if (is_array($cookie) && extract($cookie) && isset($value) && isset($flashed) && isset($lastActivity)) {
+
+				// Just want to know if the session is a flashed one
+				if ($checkIfFlashed) {
+					return $flashed;
+				// Otherwise we want the session data
+				} else {
+					$lifetime = Config::get('application.session.lifetime');
+
+					// The session is valid
+					if (($lastActivity + $lifetime) > strtotime('now')) {
+						return $value;
+					// Session has expired
+					} else {
+						$this->forget($key);
+					}
+				}
+			}
 		}
+
+		return false;
 	}
 	
 	/**
@@ -59,7 +85,7 @@ class SessionCookie extends Session implements SessionDriver
 	 */
 	public function forget($key)
 	{
-		unset($_COOKIE[$key]);	
+		setcookie($key, null, time()-3600);	
 	}
 
 	/**

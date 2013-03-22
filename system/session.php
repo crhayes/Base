@@ -77,7 +77,7 @@ class Session
 				require_once('session/drivers/cookie.php');
 				return new SessionCookie();
 			case 'database':
-				require_once('session/drivers/databse.php');
+				require_once('session/drivers/database.php');
 				return new SessionDatabase();
 			default:
 				require_once('session/drivers/native.php');

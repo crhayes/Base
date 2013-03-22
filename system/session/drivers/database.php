@@ -1,13 +1,13 @@
 <?php
 /**
- * Native session driver.
+ * Database session driver. Allows us to save sessions in a database.
  * 
  * @package     Base PHP Framework
  * @author      Chris Hayes <chris@chrishayes.ca>, <chayes@okd.com>
  * @copyright   (c) 2012-2013 Chris Hayes, OKD
  * @license     http://opensource.org/licenses/MIT
  */
-class SessionNative extends Session implements SessionDriver
+class SessionDatabase extends Session implements SessionDriver
 {	
 	/**
 	 * Encrypt the data that is to be stored in the session and then create the session.
@@ -19,13 +19,14 @@ class SessionNative extends Session implements SessionDriver
 	 */
 	public function set($key, $value, $flashed = false)
 	{
-		$data = array(
-			'value' => $value,
-			'flashed' => $flashed,
-			'lastActivity' => strtotime('now')
-		);
-
-		$_SESSION[$key] = Hash::make(serialize($data));
+		Database::query('
+			INSERT INTO session (session_id, data, flashed, last_activity)
+				VALUES(:session_id, :data, :flashed, NOW())
+				ON DUPLICATE KEY UPDATE data = :data, flashed = :flashed, last_activity = NOW()', 
+			array(
+				':session_id' => $key,
+				':data' => Hash::make(serialize($value)),
+				':flashed' => (int) $flashed));
 	}
 
 	/**
@@ -49,23 +50,23 @@ class SessionNative extends Session implements SessionDriver
 	 * @return mixed
 	 */
 	public function get($key, $checkIfFlashed = false)
-	{
-		if (isset($_SESSION[$key])) {
-			extract(unserialize(Hash::undo($_SESSION[$key])));
-			
+	{		
+		$session = Database::row('SELECT * FROM session WHERE session_id = ?', array($key));
+
+		if ($session->count()) {
 			// Just want to know if the session is a flashed one
 			if ($checkIfFlashed) {
-				return $flashed;
+				return $session->flashed;
 			// Otherwise we want the session data
 			} else {
 				$lifetime = Config::get('application.session.lifetime');
 
 				// The session is valid
-				if (($lastActivity + $lifetime) > strtotime('now')) {
-					return $value;
+				if ((strtotime($session->last_activity) + $lifetime) > strtotime('now')) {
+					return unserialize(Hash::undo($session->data));
 				// Session has expired
 				} else {
-					$this->forget($key);
+					$this->forget($session->session_id);
 				}
 			}
 		}
@@ -81,7 +82,7 @@ class SessionNative extends Session implements SessionDriver
 	 */
 	public function forget($key)
 	{
-		unset($_SESSION[$key]);	
+		Database::query('DELETE FROM session WHERE session_id = ?', array($key));
 	}
 
 	/**
@@ -92,10 +93,22 @@ class SessionNative extends Session implements SessionDriver
 	 */
 	public function sweep()
 	{
-		foreach ($_SESSION as $key => $data) {
-			if ($this->get($key, true) == true) {
-				$this->forget($key);
+		if (($sessions = $this->all()) && $sessions->count()) {
+			foreach ($sessions as $session) {
+				if ($this->get($session->session_id, true) == true) {
+					$this->forget($session->session_id);
+				}
 			}
 		}
+	}
+
+	/**
+	 * Return all database sessions.
+	 * 
+	 * @return DatabaseResult
+	 */
+	private function all()
+	{
+		return Database::query('SELECT * FROM session');
 	}
 }
