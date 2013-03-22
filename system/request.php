@@ -171,7 +171,7 @@ class Request
             $prefix = 'action';
         }
         
-        return $prefix.ucfirst($action);
+        return $prefix.ucfirst(str_replace(array('-', '_'), '', $action));
     }
 
     /**
