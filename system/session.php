@@ -21,13 +21,6 @@ class Session
 	private static $instance;
 	
 	/**
-	 * Stored instance of the phpSec AES encruption library.
-	 * 	
-	 * @var Crypt_AES
-	 */
-	public $aes;
-	
-	/**
 	 * Create a new instance of the Session class.
 	 *
 	 * The phpSec AES cryptography library is instantiated in order
