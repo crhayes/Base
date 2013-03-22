@@ -21,7 +21,7 @@ function autoloadModel($className)
     
     // By convention models are suffixed with 'Model', so we remove the
     // suffix here so we don't need it in the file name.
-    $class = str_replace('Model', '', $class);
+    $class = str_replace('model', '', $class);
     
     if (file_exists($path = APP_PATH.'models'.DS.$class.EXT)) {
         require $path;
@@ -34,7 +34,7 @@ function autoloadController($className)
     
     // By convention models are suffixed with 'Controller', so we remove the
     // suffix here so we don't need it in the file name.
-    $class = str_replace('Controller', '', $class);
+    $class = str_replace('controller', '', $class);
     
     if (file_exists($path = APP_PATH.'controllers'.DS.$class.EXT)) {
         require $path;
