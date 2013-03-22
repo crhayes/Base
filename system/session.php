@@ -103,6 +103,7 @@ class Session
 	{
 		$this->_set($key, $value, true);
 	}
+	
 	/**
 	 * Get decrypted session data with the loaded session driver.
 	 * 
