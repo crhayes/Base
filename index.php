@@ -15,11 +15,9 @@ define('APP_PATH', DOC_ROOT.'application'.DS);
 define('BASE_PATH', substr(DOC_ROOT, strlen($_SERVER['DOCUMENT_ROOT'])));
 
 // --------------------------------------------------------------
-// Load the required core system files.
+// Load the autoloader and helper functions.
 // --------------------------------------------------------------
 require SYS_PATH.'autoload'.EXT;
-require SYS_PATH.'request'.EXT;
-require SYS_PATH.'arr'.EXT;
 require SYS_PATH.'helpers'.EXT;
 
 // --------------------------------------------------------------
