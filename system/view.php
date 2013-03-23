@@ -10,7 +10,7 @@
  * @copyright   (c) 2012-2013 Chris Hayes, OKD
  * @license     http://opensource.org/licenses/MIT
  */
-class View
+class View extends Response
 {
 	/**
 	 * Store an instance of the View class.
@@ -60,13 +60,6 @@ class View
 	 * @var array
 	 */
 	private $data = array();
-
-	/**
-	 * HTTP status code.
-	 * 
-	 * @var int
-	 */
-	private $status;
 
 	/**
 	 * Returns a new template object
@@ -236,7 +229,7 @@ class View
 	}
 
 	/**
-	 * show the contents of a section.
+	 * Show the contents of a section.
 	 *
 	 * @param  string 	$name
 	 * @return string
@@ -247,6 +240,16 @@ class View
 		{
 			return $this->sections[$name];
 		}
+	}
+
+	/**
+	 * Render and output the view.
+	 * 
+	 * @return void
+	 */
+	public function send()
+	{
+		$this->render();
 	}
 
 	/**

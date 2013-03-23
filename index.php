@@ -34,10 +34,8 @@ $response = $request->route();
 // --------------------------------------------------------------
 // Appropriately handle the response.
 // --------------------------------------------------------------
-if ($response instanceOf View) {
-	$response->render();
-} elseif ($response instanceOf Redirect) {
-	$response->redirect();
+if ($response instanceOf Response) {
+	$response->send();
 } else {
 	echo $response;
 }
