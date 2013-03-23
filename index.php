@@ -12,6 +12,7 @@ define('EXT', '.php');
 define('DOC_ROOT', realpath(dirname(__FILE__)).DS);
 define('SYS_PATH', DOC_ROOT.'system'.DS);
 define('APP_PATH', DOC_ROOT.'application'.DS);
+define('LIB_PATH', DOC_ROOT.'libraries'.DS);
 define('BASE_PATH', substr(DOC_ROOT, strlen($_SERVER['DOCUMENT_ROOT'])));
 
 // --------------------------------------------------------------
