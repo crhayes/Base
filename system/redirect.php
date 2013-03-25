@@ -11,16 +11,32 @@
  * @copyright   (c) 2012-2013 Chris Hayes, OKD
  * @license     http://opensource.org/licenses/MIT
  */
-class Redirect
+class Redirect extends Response
 {
+    /**
+     * Store a singleton instance of the redirect class.
+     * 
+     * @var Redirect
+     */
     private static $instance;
 
+    /**
+     * The location we are redirecting to.
+     * 
+     * @var string
+     */
     private $location;
 
-    private $status;
-
+    /**
+     * Class constructor.
+     */
     private function __construct() {}
 
+    /**
+     * Return a singleton instance of the class.
+     * 
+     * @return Redirect
+     */
     public static function getInstance()
     {
         if ( ! isset(self::$instance)) {
@@ -64,6 +80,14 @@ class Redirect
         }
     }
 
+    /**
+     * Attach some data to redirect with. The data will be
+     * 'flashed' by the session class.
+     * 
+     * @param  string   $key
+     * @param  mixed    $value
+     * @return Redirect
+     */
     public function with($key, $value)
     {
         Session::flash($key, $value);
@@ -71,12 +95,25 @@ class Redirect
         return $this;
     }
 
-    public function redirect()
+    /**
+     * Send the response to the browser, which is a redirect header.
+     * 
+     * @return void
+     */
+    public function send()
     {
         header("Location: $this->location", true, $this->status);
         exit();
     }
     
+    /**
+     * Allow us to initiate the redirect statically and return the instance of
+     * the Redirect class for method chaining.
+     * 
+     * @param  string   $name
+     * @param  array    $arguments
+     * @return Redirect
+     */
     public static function __callStatic($name, $arguments)
     {
         call_user_func_array(array(self::getInstance(), "_$name"), $arguments);
