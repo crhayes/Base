@@ -60,10 +60,10 @@ class Redirect extends Response
         // Redirect to an absolute URL.
         if (stristr($location, 'http://') or stristr($location, 'https://')) {
             $this->location = $location;
-        }
-        
         // Redirect internally using a route.
-        $this->location = URL::toRoute($location);
+        } else {
+            $this->location = URL::toRoute($location);
+        }
     }
     
     /**
