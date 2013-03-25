@@ -54,7 +54,7 @@ class Session
 	 * @param  string 	$driver
 	 * @return SessionDriver
 	 */
-	public static function load($driver)
+	private static function load($driver)
 	{
 		require_once('session/driver.php');
 		
@@ -149,7 +149,7 @@ class Session
 	 * 
 	 * @return void
 	 */
-	public function _sweep()
+	private function _sweep()
 	{
 		foreach ($this->sessions() as $key => $data) {
 			if ($this->_get($key, true) == true) {
