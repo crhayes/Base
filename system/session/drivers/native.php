@@ -30,7 +30,7 @@ class SessionNative extends Session implements SessionDriver
 	 * @param  boolean	$checkIfFlashed
 	 * @return mixed
 	 */
-	public function get($key, $checkIfFlashed = false)
+	public function get($key)
 	{
 		return (isset($_SESSION[$key])) ? unserialize(Hash::undo($_SESSION[$key])) : false;
 	}

@@ -30,7 +30,7 @@ class SessionCookie extends Session implements SessionDriver
 	 * @param  boolean	$checkIfFlashed
 	 * @return mixed
 	 */
-	public function get($key, $checkIfFlashed = false)
+	public function get($key)
 	{
 		return (isset($_COOKIE[$key])) ? unserialize(Hash::undo($_COOKIE[$key])) : false;
 	}

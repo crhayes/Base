@@ -39,7 +39,7 @@ class SessionDatabase extends Session implements SessionDriver
 	 * @param  boolean	$checkIfFlashed
 	 * @return mixed
 	 */
-	public function get($key, $checkIfFlashed = false)
+	public function get($key)
 	{		
 		$session = Database::row('SELECT * FROM session WHERE session_id = ? AND key_val = ?', array(session_id(), $key));
 

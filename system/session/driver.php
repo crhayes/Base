@@ -11,7 +11,7 @@ interface SessionDriver
 {
 	public function set($key, $value);
 	
-	public function get($key, $checkIfFlashed = false);
+	public function get($key);
 	
 	public function forget($key);
 
