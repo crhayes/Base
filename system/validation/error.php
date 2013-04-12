@@ -70,7 +70,7 @@ class ValidationError
      * @param  mixed    $messages
      * @return void
      */
-    public function __construct($messages)
+    public function __construct($messages = false)
     {
         if ($messages) {
             $this->messages = array_merge($this->messages, $messages);
@@ -195,7 +195,7 @@ class ValidationError
             // Recursively loop through errors
             if (is_array($messages)) {
                 foreach ($messages as &$message) {
-                    $message = $this->formatMessages(&$message, &$format);
+                    $message = $this->formatMessages($message, $format);
                 }
             // Once we have reached an error message we format it            
             } else {
