@@ -58,6 +58,6 @@ class Controller
 	 */
 	public function __call($name, $arguments)
 	{
-		return View::make('error/404')->status(404)->with('title', '404 | Page Not Found');
+		return View::make('error/404')->status(404)->withData('title', '404 | Page Not Found');
 	}
 }

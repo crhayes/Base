@@ -9,12 +9,13 @@
 */
 abstract class Response
 {
-	/**
-	 * HTTP status code.
-	 * 
-	 * @var int
-	 */
 	protected $status = 200;
+
+	protected $data = array();
 	
 	abstract public function send();
+
+	abstract public function withData($key, $value);
+
+	abstract public function withErrors($errors);
 }

@@ -54,12 +54,7 @@ class View extends Response
 	 */
 	private $openSection;
 
-	/**
-	 * Store data to be used in the view.
-	 * 
-	 * @var array
-	 */
-	private $data = array();
+	private $errors;
 
 	/**
 	 * Returns a new template object
@@ -71,6 +66,11 @@ class View extends Response
 		$this->viewPath = APP_PATH.'views/';
 		$this->viewName = $view;
 		$this->data = $data;
+
+		// Require the Validation error class and set the default
+		// validaton error object
+		require_once(SYS_PATH.'validation/error.php');
+		$this->errors = new ValidationError();
 	}
 
 	/**
@@ -118,9 +118,23 @@ class View extends Response
 	 * @param  mixed 	$value
 	 * @return View
 	 */
-	public function with($key, $value)
+	public function withData($key, $value)
 	{
 		$this->data[$key] = $value;
+
+		return $this;
+	}
+
+	/**
+	 * Add errors to the view.
+	 * 
+	 * @param  string 	$key
+	 * @param  mixed 	$value
+	 * @return View
+	 */
+	public function withErrors($errors)
+	{
+		$this->errors = $errors;
 
 		return $this;
 	}
@@ -178,6 +192,8 @@ class View extends Response
 		ob_start();
 
 		extract($this->data);
+		$errors = $this->getErrors();
+
 		require $this->viewPath.$view.EXT;
 
 		return ob_get_clean();
@@ -250,6 +266,16 @@ class View extends Response
 	public function send()
 	{
 		$this->render();
+	}
+
+	/**
+	 * Get any errors we need to display in the view.
+	 * 
+	 * @return ValidationError
+	 */
+	private function getErrors()
+	{
+		return isset($_SESSION['errors']) ? Session::get('errors') : $this->errors;
 	}
 
 	/**

@@ -88,9 +88,23 @@ class Redirect extends Response
      * @param  mixed    $value
      * @return Redirect
      */
-    public function with($key, $value)
+    public function withData($key, $value)
     {
         Session::flash($key, $value);
+
+        return $this;
+    }
+
+    /**
+     * Flash the error data with the session class.
+     * 
+     * @param  string   $key
+     * @param  mixed    $value
+     * @return View
+     */
+    public function withErrors($errors)
+    {
+        Session::flash('errors', $errors);
 
         return $this;
     }
