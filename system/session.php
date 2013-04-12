@@ -113,7 +113,8 @@ class Session
 	 */
 	private function _get($key, $checkIfFlashed = false)
 	{
-		$session = $this->get($key);
+		// Get the session value if it is set
+		$session = (Arr::get($key, $_SESSION)) ? $this->get($key) : null;
 
 		if (is_array($session) && extract($session) && isset($value) && isset($flashed) && isset($lastActivity)) {
 			// Return the 'flashed' status if that's what we're after
