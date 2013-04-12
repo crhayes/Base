@@ -48,11 +48,18 @@ class Request
     private $action;
 
     /**
-     * The request parameters.
+     * The request URI parameters.
      * 
      * @var array
      */
-    private $params = array();
+    private $uriParams = array();
+
+    /**
+     * The request query parameters.
+     * 
+     * @var array
+     */
+    private $queryParams = array();
 
     /**
      * Setup the request and determine the controller directory.
@@ -61,7 +68,9 @@ class Request
      */
     public function __construct()
     {
-    	$this->uriSegments = explode('/', trim(str_replace(BASE_PATH, '', $_SERVER['REQUEST_URI']), '/'));
+    	$this->uriSegments = explode('/', trim(str_replace(BASE_PATH, '', strtok($_SERVER["REQUEST_URI"], '?')), '/'));
+        parse_str($_SERVER['QUERY_STRING'], $this->queryParams);
+
         $this->controllerPath = APP_PATH.'controllers'.DS;
     	$this->getControllerDirectory();
     }
@@ -106,13 +115,13 @@ class Request
             : 'index';
 
         // The remaining segments are request parameters
-        $this->params = $segments;
+        $this->uriParams = $segments;
 
         $controller = $this->loadController($this->controller);
         $action = $this->formatAction($this->action, $controller->restful);
         
         $response = $controller->before();
-        $response = (is_null($response)) ? call_user_func_array(array($controller, $action), $this->params) : $response;
+        $response = (is_null($response)) ? call_user_func_array(array($controller, $action), $this->uriParams) : $response;
         $controller->after();
 
         return $response;
@@ -204,7 +213,17 @@ class Request
      */
     public function param($index)
     {
-    	return Arr::get(($index-1), $this->params);
+    	return Arr::get(($index-1), $this->uriParams);
+    }
+
+    /**
+     * Return an array of query parameters.
+     * 
+     * @return array
+     */
+    public function queryParams()
+    {
+        return $this->queryParams;
     }
 
     /**
